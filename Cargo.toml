@@ -1,0 +1,9 @@
+[package]
+name = "plotting"
+version = "0.1.0"
+authors = ["Stani <stanislav.pintjuk@gmail.com>"]
+
+[dependencies]
+gnuplot = "0.0.22"
+nalgebra = "0.12.1"
+rand = "0.3.15"
