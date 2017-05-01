@@ -35,6 +35,9 @@ pub fn set_bg(fg: &mut Figure, color: &str) {
                &[Color(color), FillRegion(Below)]);
 }
 
-pub fn stdout_in_4k(fg: &mut Figure) {
-    fg.set_terminal("pngcairo size 3840, 2160 background rgb 'white'", "");
+pub fn stdout_in_4k(fg: &mut Figure, bgcolor: &str) {
+    let msg = "pngcairo size 3840, 2160 background rgb '".to_owned();
+    let msg = msg + bgcolor;
+    let msg = msg +  "'";
+    fg.set_terminal(&msg, "");
 }

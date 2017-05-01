@@ -6,7 +6,7 @@ use shapes::*;
 
 /**
  * This example will generate the Sierpinski triangle (the fractal that looks like the triforce)
- * */
+ */
 #[allow(dead_code)]
 pub fn sierpinski_triangle() {
     // first create a shape. In this case we use a triangle
@@ -16,6 +16,35 @@ pub fn sierpinski_triangle() {
     let start = Vector2::new(0.0, 0.0);
     // generate the points
     let path = get_path(&shape, start, 0.5, 100000);
+
+    // create some rendering options for Gnuplot
+    let red = &[Color("red"), PointSymbol('O')];
+    let black = &[Color("black"), PointSymbol('O'), PointSize(0.1)];
+    let orange = &[Color("orange"), PointSymbol('O')];
+
+    // render the shapes
+    let mut fg = Figure::new();
+    render(shape.iter(), &mut fg, red);
+    render((&[start]).iter(), &mut fg, orange);
+    render(path.iter(), &mut fg, black);
+
+    // and at last show the window
+    fg.show();
+}
+
+/**
+ * This example generates a cool looking square fractal.
+ */
+#[allow(dead_code)]
+pub fn squares() {
+    // first create a shape. In this case we use a triangle
+    let shape = shapes::square();
+
+    // Create a starting point (doesn't really matter what it is)
+    let start = Vector2::new(0.0, 0.0);
+    // generate the points. Note that this time the divisor is 0.75, while in the example above it
+    // was 0.5
+    let path = get_path(&shape, start, 0.75, 100000);
 
     // create some rendering options for Gnuplot
     let red = &[Color("red"), PointSymbol('O')];
@@ -174,17 +203,20 @@ pub fn generate_4k_image() {
 
     let point = PointSymbol('O');
     let tiny = PointSize(0.01);
+    
+    let bgcolor = "#000000";
 
     // Render the points
     let mut fg = Figure::new();
-    set_bg(&mut fg, "#000000");
+    set_bg(&mut fg, bgcolor);
     for (path, color) in paths {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
     // this function call will mutate `fg` and make it output 
     // the image to stdout instead of the regular old Gnuplot window.
-    // So you will have to redirect to out put to a png file.
-    stdout_in_4k(&mut fg);
+    // So you will have to redirect the output to a png file 
+    // or pipe it into a program that is able to read images from stdin.
+    stdout_in_4k(&mut fg, bgcolor);
 
     fg.show();
 }
