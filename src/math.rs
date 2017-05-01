@@ -1,10 +1,10 @@
-use nalgebra::{Vector2 as Vec2, Dim, Matrix1};
+use nalgebra::{Vector2 as Vec2, Matrix1};
 use std::vec::Vec;
 use rand;
 use rand::Rng;
 
-type Vector2 = Vec2<f64>;
-type Shape = Vec<Vector2>;
+pub type Vector2 = Vec2<f64>;
+pub type Shape = Vec<Vector2>;
 
 fn get_random_point(shape: &Shape) -> Vector2 {
     rand::thread_rng().choose(shape).expect("could not pick a random vector from shape").clone()
@@ -22,7 +22,7 @@ fn should_switch() -> bool {
     r % 16 == 0
 }
 
-pub fn get_path2_with_color<'a>(shapes: &[(&Shape, &'a str)], start: Vector2, divide_by: f64, iterations: usize) -> Vec<(Shape, &'a str)> {
+pub fn get_alternating_path_with_color<'a>(shapes: &[(&Shape, &'a str)], start: Vector2, divide_by: f64, iterations: usize) -> Vec<(Shape, &'a str)> {
     let mut pos = start;
     let mut paths = vec![];
     for &(_, color) in shapes {
@@ -46,7 +46,7 @@ pub fn get_path2_with_color<'a>(shapes: &[(&Shape, &'a str)], start: Vector2, di
     paths
 }
 
-pub fn get_path2(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize) -> Shape {
+pub fn get_alternating_path(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize) -> Shape {
     let mut pos = start;
     let mut path = vec![];
 

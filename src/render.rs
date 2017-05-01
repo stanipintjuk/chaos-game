@@ -1,9 +1,8 @@
 use gnuplot::*;
-use nalgebra::{Vector2 as Vec2, Dim, Matrix1};
+use nalgebra::{Vector2 as Vec2};
 use std::vec::Vec;
 
 type Vector2 = Vec2<f64>;
-type Shape = Vec<Vector2>;
 
 pub fn render<'a, T: Iterator<Item=&'a Vector2>>(points: T, fg: &mut Figure, options: &[PlotOption]) {
 
@@ -36,6 +35,6 @@ pub fn set_bg(fg: &mut Figure, color: &str) {
                &[Color(color), FillRegion(Below)]);
 }
 
-pub fn stdout_4k(fg: &mut Figure) {
+pub fn stdout_in_4k(fg: &mut Figure) {
     fg.set_terminal("pngcairo size 3840, 2160 background rgb 'white'", "");
 }
