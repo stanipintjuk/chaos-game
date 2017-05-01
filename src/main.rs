@@ -11,7 +11,7 @@ use rand::Rng;
 const PART_OF_WAY: f64 = 4.0 / 7.0;
 //const PART_OF_WAY: f64 = 1.0 / 2.0;
 // interesting stuff will happen if this is less than 1.0 and more than 0.5
-const ITERATIONS: usize = 100000;
+const ITERATIONS: usize = 10000000;
 
 type Vector2 = Vec2<f64>;
 type Shape = Vec<Vector2>;
@@ -183,9 +183,9 @@ fn multiple() {
 fn multiple_color() {
 
     let tri1 = vec![
-        point(0.0, 0.0),
-        point(0.0, 0.3),
-        point(0.2, 0.0),
+        point(0.0, 0.6),
+        point(0.0, 1.0),
+        point(0.2, 1.0),
     ];
 
     let tri2 = vec![
@@ -205,6 +205,7 @@ fn multiple_color() {
     let paths = get_path2_with_color(
         &[
         (&squ, "red"),
+        (&tri1, "green"),
         (&tri2, "blue"),
         ], 
         start);
@@ -213,16 +214,53 @@ fn multiple_color() {
     let tiny = PointSize(0.1);
 
     let mut fg = Figure::new();
-    render(squ.iter(), &mut fg, &[Color("red"), point]);
-    render(tri2.iter(), &mut fg, &[Color("blue"), point]);
     for (path, color) in paths {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
     fg.show();
 }
 
+fn playing_around() {
+
+    let tri1 = vec![
+        point(0.6, 0.0),
+        point(0.8, 0.1),
+        point(1.0, 1.0),
+    ];
+
+    let tri2 = vec![
+        point(0.2, 0.4),
+        point(0.25, 0.1),
+        point(0.5, 0.0),
+    ];
+
+    let col1 = "#370E61";
+    let col2 = "#3D0002";
+    let col3 = "#8F0A0E";
+
+    let start = Vector2::new(0.0, 0.0);
+    let paths = get_path2_with_color(
+        &[
+        (&tri1, col2),
+        (&tri2, "#881B05"),
+        ], 
+        start);
+
+    let point = PointSymbol('O');
+    let tiny = PointSize(0.01);
+
+
+    let mut fg = Figure::new();
+    set_bg(&mut fg, "#000000");
+    for (path, color) in paths {
+        render(path.iter(), &mut fg, &[Color(color), point, tiny])
+    }
+    fg.set_terminal("pngcairo size 3840, 2160 background rgb 'black'", "");
+    fg.show();
+}
+
 fn main() {
-    multiple_color();
+    playing_around();
 }
 
 fn render<'a, T: Iterator<Item=&'a Vector2>>(points: T, fg: &mut Figure, options: &[PlotOption]) {
@@ -235,10 +273,20 @@ fn render<'a, T: Iterator<Item=&'a Vector2>>(points: T, fg: &mut Figure, options
         ys.push(point.y.clone());
     }
 
-
     //fg.axes2d().set_pos_grid(2, 2, 1).points(xs, ys, options);
     fg.axes2d()
         .set_x_range(Fix(0.0), Fix(1.0))
         .set_y_range(Fix(0.0), Fix(1.0))
+        .set_x_axis(false, &[])
+        .set_y_axis(false, &[])
         .points(xs, ys, options);
+}
+
+fn set_bg(fg: &mut Figure, color: &str) {
+    fg.axes2d()
+        .set_x_range(Fix(0.0), Fix(1.0))
+        .set_y_range(Fix(0.0), Fix(1.0))
+        .set_x_axis(false, &[])
+        .set_y_axis(false, &[])
+        .boxes(&[0.0, 0.0, 1.0, 1.0], &[0.0, 1.0, 1.0, 0.0], &[Color(color)]);
 }
