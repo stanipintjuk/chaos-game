@@ -16,13 +16,16 @@ macro_rules! shape {
         {
             let mut temp_vec = Vec::new();
             $(
-                temp_vec.push(Vector2::new($x, $y));
+                temp_vec.push(newPoint($x, $y));
             )*
             temp_vec
         }
     };
 }
 
+pub fn newPoint(x: f64, y: f64) -> Vector2 {
+    Vector2::new(x, y)
+}
 
 #[derive(Clone)]
 pub enum Cl {
