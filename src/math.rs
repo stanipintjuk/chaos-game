@@ -22,11 +22,11 @@ fn should_switch() -> bool {
     r % 16 == 0
 }
 
-pub fn get_alternating_path_with_color<'a>(shapes: &[(&Shape, &'a str)], start: Vector2, divide_by: f64, iterations: usize) -> Vec<(Shape, &'a str)> {
+pub fn get_alternating_paths(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize) -> Vec<Shape> {
     let mut pos = start;
     let mut paths = vec![];
-    for &(_, color) in shapes {
-        paths.push((vec![], color));
+    for _ in shapes {
+        paths.push(vec![]);
     }
 
     let divisor = Matrix1::new(divide_by);
@@ -38,8 +38,8 @@ pub fn get_alternating_path_with_color<'a>(shapes: &[(&Shape, &'a str)], start: 
             shape_i =  r % shapes.len();
         }
 
-        let next = get_next_point(shapes[shape_i].0 , pos, divisor);
-        paths[shape_i].0.push(next);
+        let next = get_next_point(shapes[shape_i] , pos, divisor);
+        paths[shape_i].push(next);
         pos = next;
     }
 

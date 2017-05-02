@@ -139,14 +139,16 @@ pub fn alternate_with_color() {
     let green = "green";
     let yellow = "yellow";
 
+    let colors = vec![red, blue, green, yellow];
+
     // create the starting poin and generate the points
     let start = Vector2::new(0.0, 0.0);
-    let paths = get_alternating_path_with_color(
+    let paths = get_alternating_paths(
         &[
-        (&botleft, blue),
-        (&botright, red),
-        (&topleft, green),
-        (&topright, yellow),
+        &botleft,
+        &botright,
+        &topleft,
+        &topright,
         ], 
         start,
         0.5,
@@ -159,7 +161,7 @@ pub fn alternate_with_color() {
     // render all the points
     let mut fg = Figure::new();
     set_bg(&mut fg, "#000000");
-    for (path, color) in paths {
+    for (path, color) in paths.iter().zip(colors) {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
     render(botleft.iter(), &mut fg, &[Color(red), point]);
@@ -190,12 +192,14 @@ pub fn generate_4k_image() {
 
     let col2 = "#3D0002";
 
+    let colors = vec![col2, "#881B05"];
+
     // generate the points
     let start = Vector2::new(0.0, 0.0);
-    let paths = get_alternating_path_with_color(
+    let paths = get_alternating_paths(
         &[
-        (&tri1, col2),
-        (&tri2, "#881B05"),
+        &tri1,
+        &tri2,
         ], 
         start,
         0.5,
@@ -209,7 +213,7 @@ pub fn generate_4k_image() {
     // Render the points
     let mut fg = Figure::new();
     set_bg(&mut fg, bgcolor);
-    for (path, color) in paths {
+    for (path, color) in paths.iter().zip(colors) {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
     // this function call will mutate `fg` and make it output 

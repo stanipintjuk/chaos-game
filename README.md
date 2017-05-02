@@ -7,5 +7,5 @@ You are welcome to play around with it.
 ## Dependencies
 You must use the latest nightly version of rustc and you must have gnuplot installed
 
-## Playing aroung
-The easiest way to start playing around is to checkout the ```main.rs``` and the ```examples.rs``` files
+## Playing around
+The easiest way to start playing around is to checkout the ```main.rs``` and the ```nobs_example.rs``` files
