@@ -1,3 +1,4 @@
+
 #[macro_use]
 mod nobs;
 
@@ -12,7 +13,10 @@ mod examples;
 mod nobs_example;
 
 fn main() {
-    nobs_example::example1();
+    //nobs_example::example1();
+    //nobs_example::example2();
+    //nobs_example::example3();
+    nobs_example::example4();
     //examples::sierpinski_triangle();
     //examples::squares();
     //examples::alternate_two_shapes();

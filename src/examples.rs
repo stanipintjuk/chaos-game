@@ -1,7 +1,7 @@
 use shapes;
-use render::*;
+use render::{Figure, render};
 use math::*;
-use gnuplot::*;
+use gnuplot::{PointSymbol, Color, PointSize};
 use shapes::*;
 
 /**
@@ -83,7 +83,7 @@ pub fn alternate_two_shapes() {
 
     // create a starting point and generate the points
     let start = Vector2::new(0.0, 0.0);
-    let path = get_alternating_path(&[&squ, &tri], start, 0.75, 100000);
+    let path = get_alternating_path(&[&squ, &tri], start, 0.75, 100000, 16);
 
     // define the Gnuplot options
     let red = &[Color("red"), PointSymbol('O')];
@@ -152,7 +152,8 @@ pub fn alternate_with_color() {
         ], 
         start,
         0.5,
-        100000);
+        100000,
+        16);
 
     // define some Gnuplot stuff to make the plot look nicer
     let point = PointSymbol('O');
@@ -160,7 +161,7 @@ pub fn alternate_with_color() {
 
     // render all the points
     let mut fg = Figure::new();
-    set_bg(&mut fg, "#000000");
+    fg.set_bg("#000000");
     for (path, color) in paths.iter().zip(colors) {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
@@ -203,7 +204,8 @@ pub fn generate_4k_image() {
         ], 
         start,
         0.5,
-        100000);
+        100000,
+        16);
 
     let point = PointSymbol('O');
     let tiny = PointSize(0.01);
@@ -211,16 +213,11 @@ pub fn generate_4k_image() {
     let bgcolor = "#000000";
 
     // Render the points
-    let mut fg = Figure::new();
-    set_bg(&mut fg, bgcolor);
+    let mut fg = Figure::new4k();
+    fg.set_bg(bgcolor);
     for (path, color) in paths.iter().zip(colors) {
         render(path.iter(), &mut fg, &[Color(color), point, tiny])
     }
-    // this function call will mutate `fg` and make it output 
-    // the image to stdout instead of the regular old Gnuplot window.
-    // So you will have to redirect the output to a png file 
-    // or pipe it into a program that is able to read images from stdin.
-    stdout_in_4k(&mut fg, bgcolor);
 
     fg.show();
 }

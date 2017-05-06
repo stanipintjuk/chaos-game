@@ -1,6 +1,6 @@
-use math::{ Shape, Vector2, get_alternating_paths };
-use render::{ render as rend, set_bg, stdout_in_4k };
-use gnuplot::{Figure, PlotOption, Color, PointSize, PointSymbol, FillRegion, Above};
+use math::{ Shape, Vector2, get_alternating_paths, get_path };
+use render::{render as rend, Figure};
+use gnuplot::{PlotOption, Color, PointSize, PointSymbol, FillRegion, Above};
 use std::vec::Vec;
 
 /**
@@ -28,76 +28,95 @@ pub fn newPoint(x: f64, y: f64) -> Vector2 {
 }
 
 #[derive(Clone)]
-pub enum Cl {
+pub enum Cl<'l> {
     White,
     Red,
     Blue,
     Green,
     Black,
     Yellow,
+    Purple,
+    Other(&'l str)
 }
 
-fn getColor<'l>(color: Cl) -> &'l str{
+fn getColor<'l>(color: Cl<'l>) -> &'l str{
     match color {
         Cl::White => "white",
-        Cl::Red => "red",
-        Cl::Blue => "blue",
-        Cl::Green => "green",
+        Cl::Red => "#FF4132",
+        Cl::Blue => "#398EE0",
+        Cl::Green => "#70FA35",
         Cl::Black => "black",
-        Cl::Yellow => "yellow",
+        Cl::Yellow => "#FFF44B",
+        Cl::Purple => "#9C45FA",
+        Cl::Other(color) => color,
     }
 }
 
-pub trait Renderer {
+pub trait Renderer<'l> {
     fn render(&mut self, shape: Shape);
-    fn renderCl(&mut self, shape: Shape, color: Cl);
+    fn renderCl(&mut self, shape: Shape, color: Cl<'l>);
 
-    fn setBg(&mut self, color: Cl);
-    fn set4k(&mut self, color: Cl);
+    fn setBg(&mut self, color: Cl<'l>);
 }
 
-impl Renderer for Figure {
+impl <'l>Renderer<'l> for Figure<'l> {
     fn render(&mut self, shape: Shape) {
         self.renderCl(shape, Cl::Black)
     }
 
-    fn renderCl(&mut self, shape: Shape, color: Cl) {
-        rend(shape.iter(), self, &[Color(getColor(color)), PointSize(0.1), PointSymbol('O'), FillRegion(Above)])
+    fn renderCl(&mut self, shape: Shape, color: Cl<'l>) {
+
+        rend(shape.iter(), self, &[Color(getColor(color)), PointSize(0.0005), PointSymbol('O'), FillRegion(Above)])
     }
 
-    fn setBg(&mut self, color: Cl) {
-        set_bg(self, getColor(color));
+    fn setBg(&mut self, color: Cl<'l>) {
+        self.set_bg(getColor(color));
     }
 
-    fn set4k(&mut self, color: Cl) {
-        self.setBg(color.clone());
-        stdout_in_4k(self, getColor(color));
-    }
 }
 
-pub fn getFigure() -> Figure {
+#[allow(dead_code)]
+pub fn getFigure<'l>() -> Figure<'l> {
     Figure::new()
 }
 
-pub fn getFigureCl(bgcolor: Cl) -> Figure {
+#[allow(dead_code)]
+pub fn getFigureCl<'l>(bgcolor: Cl<'l>) -> Figure<'l> {
     let mut fg = getFigure();
     fg.setBg(bgcolor);
     fg
 }
 
-pub fn getFigure4k(bgcolor: Cl) -> Figure {
-    let mut fg = getFigure();
-    fg.set4k(bgcolor);
+#[allow(dead_code)]
+pub fn getFigure4k<'l>(bgcolor: Cl<'l>) -> Figure<'l> {
+    let mut fg = Figure::new4k();
+    fg.setBg(bgcolor);
     fg
 }
 
-pub fn getPaths(shapes: &[&Shape], divisor: f64, iterations: usize) -> Vec<Shape> {
-    let start = Vector2::new(0.0, 0.0);
+#[allow(dead_code)]
+pub fn getFigureBeyond4k<'l>(bgcolor: Cl<'l>) -> Figure<'l> {
+    let mut fg = Figure::new_beyond_4k();
+    fg.setBg(bgcolor);
+    fg
+}
 
+#[allow(dead_code)]
+pub fn getPaths(shapes: &[&Shape], divisor: f64, iterations: usize, chance: u32) -> Vec<Shape> {
+
+    let start = Vector2::new(0.0, 0.0);
     get_alternating_paths(
         shapes,
         start,
         divisor,
-        iterations
+        iterations,
+        chance
         )
+}
+
+#[allow(dead_code)]
+pub fn getPath(shape: &Shape, divisor: f64, iterations: usize) -> Shape {
+
+    let start = Vector2::new(0.0, 0.0);
+    get_path(shape, start, divisor, iterations)
 }

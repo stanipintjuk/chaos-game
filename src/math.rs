@@ -17,12 +17,12 @@ pub fn get_next_point(shape: &Shape, pos: Vector2, divisor: Matrix1<f64>) -> Vec
     pos + short_walk
 }
 
-fn should_switch() -> bool {
+fn should_switch(chance: u32) -> bool {
     let r = rand::thread_rng().gen::<u32>();
-    r % 16 == 0
+    r % chance == 0
 }
 
-pub fn get_alternating_paths(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize) -> Vec<Shape> {
+pub fn get_alternating_paths(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize, chance: u32) -> Vec<Shape> {
     let mut pos = start;
     let mut paths = vec![];
     for _ in shapes {
@@ -33,7 +33,7 @@ pub fn get_alternating_paths(shapes: &[&Shape], start: Vector2, divide_by: f64, 
     let mut shape_i = 0usize;
 
     for _ in 1..iterations {
-        if should_switch() {
+        if should_switch(chance) {
             let r = rand::thread_rng().gen::<usize>();
             shape_i =  r % shapes.len();
         }
@@ -46,7 +46,7 @@ pub fn get_alternating_paths(shapes: &[&Shape], start: Vector2, divide_by: f64, 
     paths
 }
 
-pub fn get_alternating_path(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize) -> Shape {
+pub fn get_alternating_path(shapes: &[&Shape], start: Vector2, divide_by: f64, iterations: usize, chance: u32) -> Shape {
     let mut pos = start;
     let mut path = vec![];
 
@@ -54,7 +54,7 @@ pub fn get_alternating_path(shapes: &[&Shape], start: Vector2, divide_by: f64, i
     let mut shape = shapes[0];
 
     for _ in 1..iterations {
-        if should_switch() {
+        if should_switch(chance) {
             let i = rand::thread_rng().gen::<usize>() % shapes.len();
             shape = shapes[i];
         }
